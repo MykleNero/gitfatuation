@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  fe:
+    container_name: fe
+    command: yarn start
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        - node_env=development
+        - client_id=5dcc40b71c85ad1184e5
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    stdin_open: true
+
+  be:
+    container_name: be
+    command: node app.js
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        - node_env=development
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - GH_CLIENT_ID=5dcc40b71c85ad1184e5
+      - GH_CLIENT_SECRET=b1ccb9e4a126c177d232e14300d02824f438f3c9
+      - JWT_SECRET=test
+
+  reposerver:
+    image: gcr.io/hiring-278615/reposerver
+    ports:
+      - "8080:8080"
